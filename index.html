@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Note Web :)</title>
+        <!-- CSS only -->
+        <link rel="stylesheet" href="styles.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+        <!-- contenido principal -->
+
+        <!-- Barra superior de navegación -->
+        <header class="mb-4 border-bottom border-secondary">
+            <div>
+                <nav class="navbar navbar-expand-md bg-light">
+                    <div class="container-fluid container">
+                        <a class="navbar-brand">
+                            <img class="logo" src="https://ucu.edu.uy/sites/all/themes/univer/images/logo_es.png" alt="Logo UCU">
+                        </a>
+                        <!-- Boton en modo Mobile -->
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" -controls="navbarNavDropdoariawn">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a id="todas" class="nav-link cambiarColorTodas">Todas</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a id="verdes" class="nav-link cambiarColorVerde">Verdes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a id="amarillas" class="nav-link cambiarColorAmarrillo">Amarillas</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a id="cielo" class="nav-link cambiarColorCielo">Cielo</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Tarjetas -->
+        <div class="container">
+            <div class="row" id="tarjetas"></div>
+        </div>
+
+        <!-- Boton agregar PC -->
+        <div class="fixed-button d-flex justify-content-end mt-auto sticky-bottom" id="agregarPC">
+            <div class="me-3 mt-4 ms-3" data-bs-toggle="modal" data-bs-target="#modalAgregar">
+                <button type="button" class="btn btn-primary p-3 px-4" >Agregar</button>
+            </div>
+        </div>
+        <!-- Boton agregar Mobile -->
+        <div class="fixed-button d-flex justify-content-end mt-auto sticky-bottom" id="agregarMobile">
+            <div class="me-3 mb-2 mt-4 ms-3" data-bs-toggle="modal" data-bs-target="#modalAgregar">
+                <button type="button" class="btn btn-primary rounded-circle" >+</button>
+            </div>
+        </div>
+        <!-- Boton Modo oscuro -->
+        <div>
+            <p class="mb-0 ms-2 fs-6 fw-light">Modo nocturno</p>
+        </div>
+        <div class="d-flex align-items-start">
+            <div class="form-check form-switch d-flex d-flex align-items-start">
+                <input class="form-check-input btn-primary m-1" type="checkbox" role="switch" id="flexSwitchCheckChecked">
+            </div>
+        </div>
+
+        <!-- Pie de pagina -->
+        <footer class="border-top border-secondary">
+            <div class="border-top d-flex justify-content-end">
+                <span class="m-1">&copy;copyright 2022</span>
+            </div>
+        </footer>
+
+        <!-- Modal Agregar-->
+        <div class="modal fade" id="modalAgregar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title w-100 text-center" id="modalAgregarLabel">Agregar Nota</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked>
+                            <label class="form-check-label" for="inlineRadio1">Verde</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                            <label class="form-check-label" for="inlineRadio2">Amarrillo</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+                            <label class="form-check-label" for="inlineRadio3">Cielo</label>
+                        </div>
+                        <input type="text" id="tituloTarjeta" class="my-2 form-control" placeholder="Titulo de la nota.">
+                        <input type="text" id="ubicacionTarjeta" class="mt-2 form-control" placeholder="Ingrese una ciudad.">
+                        <div class="input-group">
+                            <label class="input-group-text my-2" for="fechaTarjetaLabel">Fecha y hora</label>
+                            <input class="my-2 form-control" type="datetime-local" id="fechaTarjeta">
+                        </div>
+                        <textarea id="textoAgregar" class="form-control textoModal" placeholder="Escriba su nota."></textarea>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button  id="botonAgregarModal" type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Eliminar-->
+        <div class="modal fade" id="modalBorrar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title w-100 text-center" id="modalBorrarLabel">Eliminar Nota</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p class="w-100 text-center">¿Desea eliminar la nota?</p>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button id="botonEliminarSi" type="button" class="btn btn-primary" data-bs-dismiss="modal">Si</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Editar-->
+        <div class="modal fade" id="modalEditar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title w-100 text-center" id="modalEditarLabel">Editar Nota</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="tituloTarjetaEditar" class="mb-1 w-100 text-center" placeholder="Titulo de la nota.">
+                        <textarea id="textoEditar" class="form-control textoModal" placeholder="Escriba su nota."></textarea>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button id="botonEditarModal" type="button" class="btn btn-primary" data-bs-dismiss="modal">Editar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JavaScript Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+        <script src="script.js"></script>
+    </body>
+</html>

@@ -1,0 +1,67 @@
+
+.textoModal{
+    height: 200px;
+}
+
+.logo {
+    width: 30%;
+    height: 15%;
+}
+
+@media only screen  and (min-width : 768px){
+    #agregarMobile {
+        display: none !important;
+    }
+}
+
+@media (max-width: 768px) {
+    #agregarPC {
+        display: none !important;
+    }
+}
+
+body.dark{
+    background-color: rgb(30,30,30);
+}
+
+body.dark .navbar{
+    background-color: black !important ;
+}
+body.dark a, body.dark .fs-6{
+    color: white;
+}
+
+body.dark .card{
+    background-color: rgb(30,30,30);
+}
+
+body.dark .navbar-toggler{
+    background-color: #0d6efd;
+}
+
+body.dark footer{
+    background-color: black
+}
+
+#tarjetas .apagar{
+    display: none !important;
+}
+
+body.dark .modal-content, body.dark textarea, body.dark input{
+    background-color: black !important;
+    color: white !important;
+}
+
+.cambiarColorAmarrillo:hover {
+    color: rgb(255,193,7) !important;
+}
+.cambiarColorCielo:hover {
+    color: rgb(25,135,84) !important;
+}
+.cambiarColorVerde:hover {
+    color: rgb(13,202,240) !important;
+}
+
+.cambiarColorTodas:hover {
+    color: rgb(255,0,0) !important;
+}
