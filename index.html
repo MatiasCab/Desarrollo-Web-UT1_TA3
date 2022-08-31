@@ -102,7 +102,7 @@
                             <label class="form-check-label" for="inlineRadio3">Cielo</label>
                         </div>
                         <input type="text" id="tituloTarjeta" class="my-2 form-control" placeholder="Titulo de la nota.">
-                        <input type="text" id="ubicacionTarjeta" class="mt-2 form-control" placeholder="Ingrese una ciudad.">
+                        <select class="form-select" id="locality" name="locality" placeholder="City"></select>
                         <div class="input-group">
                             <label class="input-group-text my-2" for="fechaTarjetaLabel">Fecha y hora</label>
                             <input class="my-2 form-control" type="datetime-local" id="fechaTarjeta">
@@ -142,6 +142,11 @@
                     </div>
                     <div class="modal-body">
                         <input type="text" id="tituloTarjetaEditar" class="mb-1 w-100 text-center" placeholder="Titulo de la nota.">
+                        <select class="form-select" id="localityEditar" name="locality" placeholder="City"></select>
+                        <div class="input-group">
+                            <label class="input-group-text my-2" for="fechaTarjetaLabel">Fecha y hora</label>
+                            <input class="my-2 form-control" type="datetime-local" id="fechaTarjetaEditar">
+                        </div>
                         <textarea id="textoEditar" class="form-control textoModal" placeholder="Escriba su nota."></textarea>
                     </div>
                     <div class="modal-footer justify-content-center">

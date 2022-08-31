@@ -47,7 +47,7 @@ body.dark footer{
     display: none !important;
 }
 
-body.dark .modal-content, body.dark textarea, body.dark input{
+body.dark .modal-content, body.dark textarea, body.dark input, body.dark label, body.dark select{
     background-color: black !important;
     color: white !important;
 }
