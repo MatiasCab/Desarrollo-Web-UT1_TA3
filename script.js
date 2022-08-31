@@ -1,7 +1,13 @@
-let idTarjetas = 0;
 let ultimaTarjeta;
 let tarjetasOcultas = [];
-const misCiudades = getCiudades();
+const JSON_CIUDADES = `{
+"Montevideo": { "lat": "-34.8941", "long": "-56.0675" },
+"Buenos Aires": { "lat": "-34.6118", "long": "-58.4173" },
+"Paris": { "lat": "48.8567", "long": "2.3510" },
+"Tokyo": { "lat": "35.6785", "long": "139.6823" }}`;
+const CIUDADES = JSON.parse(JSON_CIUDADES);
+cargarCiudades();
+const clases = ["text-bg-success","text-bg-warning", "text-bg-info"];
 
 const botonAgregarModal = document.getElementById("botonAgregarModal");
 const botonEliminarModal = document.getElementById("botonEliminarSi");
@@ -23,35 +29,71 @@ botonCartasAmarrillas.addEventListener('click', function () { mostrarSoloTarjeta
 botonCartasCielo.addEventListener('click', function () { mostrarSoloTarjetasEliminando("cielo") });
 botonTodas.addEventListener('click', function () { mostrarSoloTarjetasEliminando("todos") });
 
-async function agregarTarjetas() {
+cargarTodos();
 
+async function cargarTodos() {
+  const ciudadesArr = [];
+  for (const ciudad in CIUDADES){
+    ciudadesArr.push(ciudad);
+  }
+  const respuesta = await fetch('https://jsonplaceholder.typicode.com/todos');
+  const todos = await respuesta.json();
+  let indice = 0;
+  for(const todo of todos) {
+    crearTarjeta({
+      cuerpo: todo.title,
+      titulo: todo.title,
+      ciudad: ciudadesArr[indice % 4],
+      clase: clases[indice++ % 3], 
+      fecha: new Date(Date.now()),
+    });
+  }
+}
+
+function agregarTarjetas() {
   const textoTarjeta = document.getElementById("textoAgregar");
   const titulo = document.getElementById("tituloTarjeta");
-  const divTarjetas = document.getElementById("tarjetas");
   const inputFecha = document.getElementById('fechaTarjeta');
   const inputCiudad = document.getElementById('locality');
-  const fecha = inputFecha.value ? new Date(inputFecha.value) : new Date(Date.now());
-  const fechaFormateada = formatearFecha(fecha);
-  const temperaturaFormateada = await getClima(fecha, misCiudades[inputCiudad.value]);
-  const temperatura = temperaturaFormateada ? `${temperaturaFormateada} °C` : "";
   let clase;
 
   if (document.getElementById("inlineRadio1").checked) {
-    clase = "text-bg-success";
+    clase = clases[0];
   } else if (document.getElementById("inlineRadio2").checked) {
-    clase = "text-bg-warning";
+    clase = clases[1];
   } else {
-    clase = "text-bg-info";
+    clase = clases[2];
   }
 
+  crearTarjeta({
+    cuerpo: textoTarjeta.value,
+    titulo: titulo.value,
+    ciudad: inputCiudad.value,
+    fecha: inputFecha.value,
+    clase
+  });
+
+  textoTarjeta.value = "";
+  titulo.value = "";
+  inputFecha.value = "";
+  inputCiudad.value = "";
+}
+
+async function crearTarjeta(card, post) {
+  const fecha = card.fecha ? new Date(card.fecha) : new Date(Date.now());
+  const fechaFormateada = formatearFecha(fecha);
+  const temperaturaFormateada = await getClima(fecha, CIUDADES[card.ciudad]);
+  card.temperatura = temperaturaFormateada ? `${temperaturaFormateada} °C` : "";
+  card.idTarjeta = Math.floor(Math.random() * 1000000);
+  const divTarjetas = document.getElementById("tarjetas");
   divTarjetas.innerHTML +=
                           `<div class="col-sm-4 mb-3">
-                            <div id="${idTarjetas}" class="card ${clase}" data-bs-toggle="modal" data-bs-target="#modalEditar" onclick="obtenerId(this.id)">
+                            <div id="${card.idTarjeta}" class="card ${card.clase}" data-bs-toggle="modal" data-bs-target="#modalEditar" onclick="obtenerId(this.id)">
                               <div class="card-header">
-                                <h5 id="${idTarjetas}TargetTitle"class="card-title w-100 text-center">${titulo.value}</h5>
+                                <h5 id="${card.idTarjeta}TargetTitle"class="card-title w-100 text-center">${card.titulo}</h5>
                               </div>
                               <div class="card-body">
-                                  <p id="${idTarjetas}TargetText" class="card-text">${textoTarjeta.value}</p>
+                                  <p id="${card.idTarjeta}TargetText" class="card-text">${card.cuerpo}</p>
                                   <div class="d-flex justify-content-end">
                                       <button type="button" class="btn btn-danger btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalBorrar">
                                           <i class="text-light"><img src="basura.png" alt="borrar" width="20vw" height="20vh"></i>
@@ -60,34 +102,27 @@ async function agregarTarjetas() {
                               </div>
                               <div class="card-footer container">
                                   <div class="row">
-                                      <p class="col fw-light" id="${idTarjetas}TargetCity">${inputCiudad.value} - ${temperatura}</p>
-                                      <p class="col-auto fw-light text-end" id="${idTarjetas}TargetDate">${fechaFormateada}</p>
+                                      <p class="col fw-light" id="${card.idTarjeta}TargetCity">${card.ciudad} - ${card.temperatura}</p>
+                                      <p class="col-auto fw-light text-end" id="${card.idTarjeta}TargetDate">${fechaFormateada}</p>
                                   </div>
                               </div>
                             </div>
                           </div>`;
-  idTarjetas++;
-  textoTarjeta.value = "";
-  titulo.value = "";
-  inputFecha.value = "";
-  inputCiudad.value = "";
+  
+  if (post) {
+    postTarjeta(card);
+  }
 }
 
-function getCiudades(){
-  const CIUDADES = `{"Montevideo": { "lat": "-34.8941", "long": "-56.0675" },
-                    "Buenos Aires": {"lat": "-34.6118", "long": "-58.4173" },
-                    "Paris": {"lat": "48.8567", "long": "2.3510" },
-                    "Tokyo": {"lat": "35.6785", "long": "139.6823" }}`;
-
+function cargarCiudades(){
   let dropdown = document.getElementById('locality')
   let dropdownEditar = document.getElementById('localityEditar');
-  let ciudadesJson = JSON.parse(CIUDADES);
-  for(var ciudad in ciudadesJson){
+  for(const ciudad in CIUDADES){
     dropdown.innerHTML += `<option>${ciudad}</option>`;
     dropdownEditar.innerHTML += `<option>${ciudad}</option>`;
   }
-  return ciudadesJson;
 }
+
 
 async function getClima(date, ciudad){
   try {
@@ -109,6 +144,7 @@ function formatearFecha(fecha){
 
 function eliminarTarjeta() {
   document.getElementById(`${ultimaTarjeta}`).parentElement.remove();
+  deleteFromServer(ultimaTarjeta);
 }
 
 async function editarTarjeta() {
@@ -117,7 +153,7 @@ async function editarTarjeta() {
   const ciudadTarjeta = document.getElementById("localityEditar");
   const fechaTarjeta = document.getElementById("fechaTarjetaEditar");
   const fecha = fechaTarjeta.value ? new Date(fechaTarjeta.value) : new Date(Date.now());
-  const temperaturaFormateada = await getClima(fecha, misCiudades[ciudadTarjeta.value]);
+  const temperaturaFormateada = await getClima(fecha, CIUDADES[ciudadTarjeta.value]);
 
   document.getElementById(`${ultimaTarjeta}TargetDate`).textContent = `${formatearFecha(fecha)}`;
   document.getElementById(`${ultimaTarjeta}TargetText`).textContent = `${textoTarjeta.value}`;
@@ -176,5 +212,42 @@ function mostrarSoloTarjetasEliminando(color) {
         divTarjetas.appendChild(carta.parentNode);
       }
     }
+  }
+
+  async function postTarjeta(card){
+    
+    fetch('https://jsonplaceholder.typicode.com/todos', {
+    method: 'POST',
+    body: JSON.stringify({
+      title: card.titulo,
+      cuerpo: card.texto,
+      ciudad: card.ciudad,
+      clase: card.clase,
+      temperatura: card.temperatura,
+      fechaFormateada: card.fechaFormateada,
+      idTarjeta: card.idTarjeta
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+    })
+    .then((response) => response.json())
+    .then((json) => console.log(json));
+  }
+
+  /*
+  {
+    cuerpo: textoTarjeta.value,
+    titulo: titulo.value,
+    ciudad: inputCiudad.value,
+    clase, temperatura, fechaFormateada
+  }
+  */
+
+  async function deleteFromServer(idTarjeta) {
+    fetch(`https://jsonplaceholder.typicode.com/todos/${idTarjeta}`, {
+      method: 'DELETE',
+    });
+    
   }
 }
