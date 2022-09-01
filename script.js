@@ -59,7 +59,6 @@ function agregarTarjetas() {
   const inputFecha = document.getElementById('fechaTarjeta');
   const inputCiudad = document.getElementById('locality');
   let clase;
-
   if (document.getElementById("inlineRadio1").checked) {
     clase = clases[0];
   } else if (document.getElementById("inlineRadio2").checked) {
@@ -68,6 +67,7 @@ function agregarTarjetas() {
     clase = clases[2];
   }
 
+  console.log(document.getElementById('fechaTarjeta'));
   crearTarjeta({
     id: Math.floor(Math.random() * 1000000),
     cuerpo: textoTarjeta.value,
@@ -80,7 +80,6 @@ function agregarTarjetas() {
   textoTarjeta.value = "";
   titulo.value = "";
   inputFecha.value = "";
-  inputCiudad.value = "";
 }
 
 async function crearTarjeta(card, post) {
@@ -93,7 +92,7 @@ async function crearTarjeta(card, post) {
                           `<div class="col-sm-4 mb-3">
                             <div id="${card.id}" class="card ${card.clase}" data-bs-toggle="modal" data-bs-target="#modalEditar" onclick="obtenerId(this.id)">
                               <div class="card-header">
-                                <h5 id="${card.id}TargetTitle"class="card-title w-100 text-center">${card.titulo}</h5>
+                                <h5 id="${card.id}TargetTitle" class="card-title w-100 text-center">${card.titulo}</h5>
                               </div>
                               <div class="card-body">
                                   <p id="${card.id}TargetText" class="card-text">${card.cuerpo}</p>
@@ -163,7 +162,7 @@ async function editarTarjeta() {
   document.getElementById(`${ultimaTarjeta}TargetTitle`).textContent = `${tituloTarjeta.value}`;
 
   const temperatura = `${temperaturaFormateada} °C`;
-
+  document.getElementById(`${ultimaTarjeta}TargetCity`).textContent = `${ciudadTarjeta.value} - ${temperatura}`;
   putTarjeta({
     cuerpo: textoTarjeta.value,
     titulo: tituloTarjeta.value,
@@ -171,7 +170,6 @@ async function editarTarjeta() {
     fecha: fecha,
     id: ultimaTarjeta
   });
-  document.getElementById(`${ultimaTarjeta}TargetCity`).textContent = `${ciudadTarjeta.value} - ${temperatura}`;
   textoTarjeta.value = "";
   tituloTarjeta.value = "";
 }
@@ -180,9 +178,22 @@ function agregarClaseOscura() {
   document.body.classList.toggle('dark');
 }
 
+function rellenarModalEditar(id){
+  const fechaAPoner = document.getElementById(`${id}TargetDate`).textContent.split(" ");
+  let dias = fechaAPoner[0].split("/");
+  dias[1] = dias[1] .length < 2? `0${dias[1]}` : dias[1];
+  dias[0] = dias[0] .length < 2? `0${dias[0]}` : dias[0];
+  let fechaFormateada = `${dias[2]}-${dias[1]}-${dias[0]}T${fechaAPoner[1]}`;
+
+  document.getElementById("fechaTarjetaEditar").value = fechaFormateada;
+  document.getElementById("tituloTarjetaEditar").value = document.getElementById(`${id}TargetTitle`).textContent;
+  document.getElementById("localityEditar").value = document.getElementById(`${id}TargetCity`).textContent.split(" ")[0];
+  document.getElementById("textoEditar").value = document.getElementById(`${id}TargetText`).textContent;
+}
+
 function obtenerId(id) {
   ultimaTarjeta = id;
-  document.getElementById("textoEditar").value = document.getElementById(`${id}TargetText`).textContent;
+  rellenarModalEditar(id);
 }
 
 function mostrarSoloTarjetasEliminando(color) {
