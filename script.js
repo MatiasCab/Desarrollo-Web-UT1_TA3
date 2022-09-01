@@ -1,4 +1,4 @@
-const HOST = window.location.host;
+const HOST = window.location.hostname;
 let ultimaTarjeta;
 let tarjetasOcultas = [];
 const JSON_CIUDADES = `{
@@ -164,6 +164,13 @@ async function editarTarjeta() {
 
   const temperatura = `${temperaturaFormateada} °C`;
 
+  putTarjeta({
+    cuerpo: textoTarjeta.value,
+    titulo: tituloTarjeta.value,
+    ciudad: ciudadTarjeta.value,
+    fecha: fecha,
+    id: ultimaTarjeta
+  });
   document.getElementById(`${ultimaTarjeta}TargetCity`).textContent = `${ciudadTarjeta.value} - ${temperatura}`;
   textoTarjeta.value = "";
   tituloTarjeta.value = "";
@@ -236,8 +243,26 @@ async function postTarjeta(card) {
     ciudad: card.ciudad,
     clase: card.clase,
     temperatura: card.temperatura,
-    fechaFormateada: card.fechaFormateada,
+    fechaFormateada: card.fecha,
     id: card.id
+  }),
+  headers: {
+    'Content-type': 'application/json; charset=UTF-8',
+  },
+  })
+  .then((response) => response.json())
+  .then((json) => console.log(json));
+}
+
+async function putTarjeta(card) {
+    
+  fetch(`http://${HOST}/notas/${card.id}`, {
+  method: 'PUT',
+  body: JSON.stringify({
+    title: card.titulo,
+    cuerpo: card.cuerpo,
+    ciudad: card.ciudad,
+    fecha: card.fecha,
   }),
   headers: {
     'Content-type': 'application/json; charset=UTF-8',
